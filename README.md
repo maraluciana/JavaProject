@@ -1,5 +1,4 @@
-# JavaProject - Petals Haven
-
+# Petals Haven - Belu Mara Luciana 406
 "Petals Haven" is an online floral retail platform that specializes in providing a diverse selection of fresh and artfully arranged flowers to customers worldwide. As an e-commerce platform, offers a seamless and user-friendly interface, allowing customers to browse through an extensive assortment of floral arrangements, bouquets, and individual stems from the comfort of their homes.
 
 ## Business Requirements:
