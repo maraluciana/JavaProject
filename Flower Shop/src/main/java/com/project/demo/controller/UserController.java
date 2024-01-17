@@ -66,17 +66,6 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable UUID userId, @RequestBody User updatedUser) {
-        User updatedUserResult = userService.updateUser(userId, updatedUser);
-
-        if (updatedUserResult != null) {
-            return ResponseEntity.ok(updatedUserResult);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for the given ID.");
-        }
-    }
-
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
         userService.deleteUser(userId);

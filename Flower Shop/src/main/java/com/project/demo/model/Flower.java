@@ -1,12 +1,13 @@
 package com.project.demo.model;
 
 import jakarta.persistence.*;
-
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "FLOWERS")
 public class Flower {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -25,6 +26,12 @@ public class Flower {
 
     @Column(nullable = false)
     private String availability;
+
+    @OneToMany(mappedBy = "flower", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
+
+    @OneToMany(mappedBy = "flower", cascade = CascadeType.ALL)
+    private List<Category> categories;
 
     public Flower() {
     }
@@ -83,5 +90,21 @@ public class Flower {
 
     public void setAvailability(String availability) {
         this.availability = availability;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

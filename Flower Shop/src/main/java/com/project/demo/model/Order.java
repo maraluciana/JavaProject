@@ -3,7 +3,6 @@ package com.project.demo.model;
 import com.project.demo.enums.Enums;
 import jakarta.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,25 +13,33 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "order_id")
-    private List<OrderItem> orderItems;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
-    @Column(name = "total_price")
-    private int totalPrice;
+    @Column(nullable = false)
+    private Date orderDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "order_date")
-    private Date date;
+    @Column(nullable = false)
+    private double totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "order_status")
     private Enums.OrderStatus orderStatus;
 
-    // Getters and Setters
+    public Order() {
+    }
+
+    public Order(User user, Cart cart, Date orderDate, double totalAmount, Enums.OrderStatus orderStatus) {
+        this.user = user;
+        this.cart = cart;
+        this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.orderStatus = orderStatus;
+    }
 
     public UUID getId() {
         return id;
@@ -42,36 +49,36 @@ public class Order {
         this.id = id;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public Date getOrderDate() {
+        return orderDate;
     }
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
     }
 
-    public Date getDate() {
-        return date;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public Enums.OrderStatus getOrderStatus() {

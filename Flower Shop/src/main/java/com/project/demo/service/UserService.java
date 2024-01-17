@@ -1,6 +1,7 @@
 package com.project.demo.service;
 
 import com.project.demo.model.User;
+import com.project.demo.repository.CategoryRepository;
 import com.project.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,16 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User register(User user) {
-        return userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     public User login(String email, String password) {
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = this.userRepository.findByEmail(email).orElse(null);
 
         if (user != null && user.getPassword().equals(password)) {
             return user;
@@ -30,27 +34,14 @@ public class UserService {
     }
 
     public Optional<User> getUserById(UUID userId) {
-        return userRepository.findById(userId);
+        return this.userRepository.findById(userId);
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public User updateUser(UUID userId, User updatedUser) {
-        Optional<User> existingUser = userRepository.findById(userId);
-        if (existingUser.isPresent()) {
-            User userToUpdate = existingUser.get();
-            userToUpdate.setFirstName(updatedUser.getFirstName());
-            userToUpdate.setLastName(updatedUser.getLastName());
-            userToUpdate.setEmail(updatedUser.getEmail());
-            userToUpdate.setPhoneNumber(updatedUser.getPhoneNumber());
-            return userRepository.save(userToUpdate);
-        }
-        return null;
+        return this.userRepository.findAll();
     }
 
     public void deleteUser(UUID userId) {
-        userRepository.deleteById(userId);
+        this.userRepository.deleteById(userId);
     }
 }
