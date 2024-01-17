@@ -7,7 +7,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "FLOWERS")
 public class Flower {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -25,23 +24,24 @@ public class Flower {
     private String imageUrl;
 
     @Column(nullable = false)
-    private String availability;
+    private boolean available;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @OneToMany(mappedBy = "flower", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
 
-    @OneToMany(mappedBy = "flower", cascade = CascadeType.ALL)
-    private List<Category> categories;
-
     public Flower() {
     }
 
-    public Flower(String name, String description, int price, String imageUrl, String availability) {
+    public Flower(String name, String description, int price, String imageUrl, boolean available) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.availability = availability;
+        this.available = available;
     }
 
     public UUID getId() {
@@ -84,12 +84,12 @@ public class Flower {
         this.imageUrl = imageUrl;
     }
 
-    public String getAvailability() {
-        return availability;
+    public boolean getAvailability() {
+        return available;
     }
 
-    public void setAvailability(String availability) {
-        this.availability = availability;
+    public void setAvailability(boolean available) {
+        this.available = available;
     }
 
     public List<CartItem> getCartItems() {
@@ -100,11 +100,11 @@ public class Flower {
         this.cartItems = cartItems;
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

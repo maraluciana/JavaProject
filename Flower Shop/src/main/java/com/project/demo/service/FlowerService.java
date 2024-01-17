@@ -1,60 +1,54 @@
 package com.project.demo.service;
 
+import com.project.demo.model.Category;
 import com.project.demo.model.Flower;
 import com.project.demo.repository.CategoryRepository;
 import com.project.demo.repository.FlowerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class FlowerService {
 
-    @Autowired
     private FlowerRepository flowerRepository;
-    public FlowerService(CategoryRepository categoryRepository) {
+    private CategoryRepository categoryRepository;
+
+    public FlowerService(FlowerRepository flowerRepository, CategoryRepository categoryRepository) {
         this.flowerRepository = flowerRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public Flower addFlower(Flower flower) {
-        return this.flowerRepository.save(flower);
+        Optional<Category> category = categoryRepository.findById(flower.getCategory().getId());
+
+        if (category.isPresent()) {
+            flower.setCategory(category.get());
+            return flowerRepository.save(flower);
+        } else {
+            throw null;
+        }
     }
 
+
     public List<Flower> getAllFlowers() {
-        return this.flowerRepository.findAll();
+        return flowerRepository.findAll();
     }
 
     public Optional<Flower> getFlowerById(UUID flowerId) {
-        return this.flowerRepository.findById(flowerId);
+        return flowerRepository.findById(flowerId);
     }
 
-    public Flower updateFlower(UUID flowerId, Flower updatedFlower) {
-        Optional<Flower> existingFlower = this.flowerRepository.findById(flowerId);
-        if (existingFlower.isPresent()) {
-            Flower flowerToUpdate = existingFlower.get();
-            flowerToUpdate.setName(updatedFlower.getName());
-            flowerToUpdate.setDescription(updatedFlower.getDescription());
-            flowerToUpdate.setPrice(updatedFlower.getPrice());
-            flowerToUpdate.setImageUrl(updatedFlower.getImageUrl());
-            flowerToUpdate.setAvailability(updatedFlower.getAvailability());
-            return this.flowerRepository.save(flowerToUpdate);
+    public Flower changeAvailability(UUID flowerId, boolean newAvailability) {
+        Optional<Flower> optionalFlower = flowerRepository.findById(flowerId);
+
+        if (optionalFlower.isPresent()) {
+            Flower flower = optionalFlower.get();
+            flower.setAvailability(newAvailability);
+            return flowerRepository.save(flower);
         }
+
         return null;
-    }
-
-    public List<Flower> getFlowersByAvailability(String availability) {
-        return this.flowerRepository.findByAvailability(availability);
-    }
-
-    public List<Flower> getFlowersInPriceRange(int minPrice, int maxPrice) {
-        return this.flowerRepository.findByPriceBetween(minPrice, maxPrice);
-    }
-
-    public void deleteFlower(UUID flowerId) {
-        this.flowerRepository.deleteById(flowerId);
     }
 }
