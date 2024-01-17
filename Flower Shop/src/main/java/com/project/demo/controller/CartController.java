@@ -19,8 +19,8 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> createCart(@RequestBody UUID userId) {
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<String> createCart(@PathVariable UUID userId) {
         Optional<Cart> createdCart = cartService.createCart(userId);
 
         if (createdCart.isPresent()) {

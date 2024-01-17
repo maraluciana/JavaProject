@@ -1,5 +1,6 @@
 package com.project.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.demo.enums.Enums;
 import jakarta.persistence.*;
 import java.util.Date;
@@ -15,10 +16,12 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private Cart cart;
 
     @Column(nullable = false)

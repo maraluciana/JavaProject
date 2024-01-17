@@ -29,14 +29,12 @@ public class CartService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         return userOptional.map(user -> {
-            // Close any existing open cart for the user
             Optional<Cart> openCart = cartRepository.findFirstByUserAndIsCartOpen(user, true);
             openCart.ifPresent(cart -> {
                 cart.setCartOpen(false);
                 cartRepository.save(cart);
             });
 
-            // Create a new open cart for the user
             Cart newCart = new Cart(user, true);
             return Optional.of(cartRepository.save(newCart));
         }).orElse(Optional.empty());
@@ -56,6 +54,11 @@ public class CartService {
                     cartItem.setQuantity(cartItemDTO.getQuantity());
 
                     cart.addCartItem(cartItem);
+
+                    // Recalculate total price based on the newly added CartItem
+                    int newTotalPrice = calculateTotalPrice(cart);
+                    cart.setTotalPrice(newTotalPrice);
+
                     return cartRepository.save(cart);
                 } else {
                     return null;
@@ -66,7 +69,11 @@ public class CartService {
         }).orElse(null);
     }
 
-
+    private int calculateTotalPrice(Cart cart) {
+        return cart.getCartItems().stream()
+                .mapToInt(item -> item.getFlower().getPrice() * item.getQuantity())
+                .sum();
+    }
 
     public void closeCart(UUID cartId) {
         Optional<Cart> openCart = cartRepository.findById(cartId);

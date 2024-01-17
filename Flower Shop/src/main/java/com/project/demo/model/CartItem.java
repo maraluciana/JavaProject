@@ -1,5 +1,6 @@
 package com.project.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.UUID;
 
@@ -13,10 +14,12 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
+    @JsonIgnore
     private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "flower_id", nullable = false)
+    @JsonIgnore
     private Flower flower;
 
     @Column(name = "quantity", nullable = false)
