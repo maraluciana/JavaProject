@@ -1,24 +1,28 @@
 package com.project.demo.service;
 
+import com.project.demo.dto.CartItemRequestDTO;
 import com.project.demo.model.Cart;
 import com.project.demo.model.CartItem;
+import com.project.demo.model.Flower;
 import com.project.demo.model.User;
 import com.project.demo.repository.CartRepository;
+import com.project.demo.repository.FlowerRepository;
 import com.project.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class CartService {
 
-    private CartRepository cartRepository;
-    private UserRepository userRepository;
+    private final CartRepository cartRepository;
+    private final UserRepository userRepository;
+    private final FlowerRepository flowerRepository;
 
-    public CartService(CartRepository cartRepository, UserRepository userRepository) {
+    public CartService(CartRepository cartRepository, UserRepository userRepository, FlowerRepository flowerRepository) {
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
+        this.flowerRepository = flowerRepository;
     }
 
     public Optional<Cart> createCart(UUID userId) {
@@ -38,17 +42,31 @@ public class CartService {
         }).orElse(Optional.empty());
     }
 
-    public Cart addCartItem(UUID cartId, CartItem cartItem) {
+    public Cart addCartItem(UUID cartId, CartItemRequestDTO cartItemDTO) {
         Optional<Cart> openCart = cartRepository.findById(cartId);
         return openCart.map(cart -> {
             if (cart.isCartOpen()) {
-                cart.addCartItem(cartItem);
-                return cartRepository.save(cart);
+                Optional<Flower> flowerOptional = flowerRepository.findById(cartItemDTO.getFlowerId());
+
+                if (flowerOptional.isPresent()) {
+                    Flower flower = flowerOptional.get();
+
+                    CartItem cartItem = new CartItem();
+                    cartItem.setFlower(flower);
+                    cartItem.setQuantity(cartItemDTO.getQuantity());
+
+                    cart.addCartItem(cartItem);
+                    return cartRepository.save(cart);
+                } else {
+                    return null;
+                }
             } else {
                 return null;
             }
         }).orElse(null);
     }
+
+
 
     public void closeCart(UUID cartId) {
         Optional<Cart> openCart = cartRepository.findById(cartId);

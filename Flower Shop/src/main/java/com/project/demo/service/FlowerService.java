@@ -1,5 +1,6 @@
 package com.project.demo.service;
 
+import com.project.demo.dto.FlowerRequestDTO;
 import com.project.demo.model.Category;
 import com.project.demo.model.Flower;
 import com.project.demo.repository.CategoryRepository;
@@ -12,22 +13,30 @@ import java.util.UUID;
 @Service
 public class FlowerService {
 
-    private FlowerRepository flowerRepository;
-    private CategoryRepository categoryRepository;
+    private final FlowerRepository flowerRepository;
+    private final CategoryRepository categoryRepository;
 
     public FlowerService(FlowerRepository flowerRepository, CategoryRepository categoryRepository) {
         this.flowerRepository = flowerRepository;
         this.categoryRepository = categoryRepository;
     }
 
-    public Flower addFlower(Flower flower) {
-        Optional<Category> category = categoryRepository.findById(flower.getCategory().getId());
+    public Flower addFlower(FlowerRequestDTO flowerRequestDTO) {
+        Optional<Category> category = categoryRepository.findById(flowerRequestDTO.getCategoryId());
 
         if (category.isPresent()) {
-            flower.setCategory(category.get());
+            Flower flower = new Flower(
+                    flowerRequestDTO.getName(),
+                    flowerRequestDTO.getDescription(),
+                    flowerRequestDTO.getPrice(),
+                    flowerRequestDTO.getImageUrl(),
+                    flowerRequestDTO.isAvailable(),
+                    category.get()
+            );
+
             return flowerRepository.save(flower);
         } else {
-            throw null;
+            return null;
         }
     }
 
@@ -36,19 +45,13 @@ public class FlowerService {
         return flowerRepository.findAll();
     }
 
-    public Optional<Flower> getFlowerById(UUID flowerId) {
-        return flowerRepository.findById(flowerId);
-    }
-
-    public Flower changeAvailability(UUID flowerId, boolean newAvailability) {
+    public Flower changeAvailability(UUID flowerId) {
         Optional<Flower> optionalFlower = flowerRepository.findById(flowerId);
 
-        if (optionalFlower.isPresent()) {
-            Flower flower = optionalFlower.get();
-            flower.setAvailability(newAvailability);
+        return optionalFlower.map(flower -> {
+            flower.setAvailability(!flower.getAvailability());
             return flowerRepository.save(flower);
-        }
-
-        return null;
+        }).orElse(null);
     }
+
 }

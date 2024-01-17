@@ -2,18 +2,20 @@ package com.project.demo.controller;
 
 import com.project.demo.dto.CartItemRequestDTO;
 import com.project.demo.model.Cart;
+import com.project.demo.model.CartItem;
 import com.project.demo.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/carts")
 public class CartController {
-    private final CartService cartService;
+    private CartService cartService;
 
     public CartController(CartService cartService) {
         this.cartService = cartService;

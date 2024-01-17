@@ -1,21 +1,20 @@
 package com.project.demo.controller;
 
-import com.project.demo.model.Flower;
 import com.project.demo.model.Category;
+import com.project.demo.model.Flower;
 import com.project.demo.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;

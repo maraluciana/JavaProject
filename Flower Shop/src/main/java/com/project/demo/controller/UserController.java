@@ -1,6 +1,8 @@
 package com.project.demo.controller;
 
+import com.project.demo.dto.LoginRequestDTO;
 import com.project.demo.model.User;
+import com.project.demo.service.OrderService;
 import com.project.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,13 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-        User registeredUser = userService.register(user);
+        User registeredUser = this.userService.register(user);
 
         if (registeredUser != null) {
             return ResponseEntity.ok(registeredUser);
@@ -31,11 +36,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> requestBody) {
-        String email = requestBody.get("email");
-        String password = requestBody.get("password");
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDTO loginRequest) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
 
-        User loggedInUser = userService.login(email, password);
+        User loggedInUser = this.userService.login(email, password);
 
         if (loggedInUser != null) {
             return ResponseEntity.ok(loggedInUser);
@@ -44,20 +49,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable UUID userId) {
-        Optional<User> user = userService.getUserById(userId);
 
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+        List<User> users = this.userService.getAllUsers();
 
         if (!users.isEmpty()) {
             return ResponseEntity.ok(users);
@@ -68,7 +63,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
-        userService.deleteUser(userId);
+        this.userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 }

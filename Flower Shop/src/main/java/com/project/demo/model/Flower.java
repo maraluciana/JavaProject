@@ -1,5 +1,6 @@
 package com.project.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class Flower {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
     private Category category;
 
     @OneToMany(mappedBy = "flower", cascade = CascadeType.ALL)
@@ -36,12 +38,13 @@ public class Flower {
     public Flower() {
     }
 
-    public Flower(String name, String description, int price, String imageUrl, boolean available) {
+    public Flower(String name, String description, int price, String imageUrl, boolean available, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
         this.available = available;
+        this.category = category;
     }
 
     public UUID getId() {
