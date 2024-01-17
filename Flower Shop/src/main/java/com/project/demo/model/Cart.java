@@ -1,6 +1,8 @@
 package com.project.demo.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +40,20 @@ public class Cart {
         this.cartItems = cartItems;
         this.totalPrice = totalPrice;
         this.isCartOpen = isCartOpen;
+    }
+
+    public Cart(User user, boolean isCartOpen) {
+        this.user = user;
+        this.isCartOpen = isCartOpen;
+    }
+
+    public void addCartItem(CartItem cartItem) {
+        if (cartItems == null) {
+            cartItems = new ArrayList<>();
+        }
+
+        cartItems.add(cartItem);
+        cartItem.setCart(this);
     }
 
     public UUID getId() {
