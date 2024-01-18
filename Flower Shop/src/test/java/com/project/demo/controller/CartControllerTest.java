@@ -37,14 +37,14 @@ class CartControllerTest {
     @Test
     void testAddCartItemFailure() {
         CartService cartServiceMock = mock(CartService.class);
-        CartController yourController = new CartController(cartServiceMock);
+        CartController cartController = new CartController(cartServiceMock);
 
         UUID cartId = UUID.randomUUID();
         CartItemRequestDTO cartItemDTO = new CartItemRequestDTO(UUID.randomUUID(), 2);
 
         when(cartServiceMock.addCartItem(eq(cartId), any())).thenReturn(null);
 
-        ResponseEntity<String> response = yourController.addCartItem(cartId, cartItemDTO);
+        ResponseEntity<String> response = cartController.addCartItem(cartId, cartItemDTO);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Failed to add cart item. Cart may not be open or not found.", response.getBody());
