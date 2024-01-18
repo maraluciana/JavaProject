@@ -34,6 +34,10 @@ public class Cart {
     @Column(name = "is_cart_open", nullable = false)
     private boolean isCartOpen;
 
+    public Cart() {
+
+    }
+
     public Cart(UUID id, User user, List<Order> orders, List<CartItem> cartItems, int totalPrice, boolean isCartOpen) {
         this.id = id;
         this.user = user;

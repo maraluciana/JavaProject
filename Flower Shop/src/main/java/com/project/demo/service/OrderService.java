@@ -40,7 +40,7 @@ public class OrderService {
                 order.setTotalAmount(cart.getTotalPrice());
                 order.setOrderStatus(Enums.OrderStatus.PLACED);
 
-                cart.setCartOpen(false);
+//                cart.setCartOpen(false);
                 cartRepository.save(cart);
 
                 return Optional.of(orderRepository.save(order));
