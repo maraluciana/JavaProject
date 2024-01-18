@@ -6,6 +6,11 @@ public class CartItemRequestDTO {
     private UUID flowerId;
     private int quantity;
 
+    public CartItemRequestDTO(UUID flowerId, int quantity){
+        this.flowerId = flowerId;
+        this.quantity = quantity;
+    }
+
     public UUID getFlowerId() {
         return flowerId;
     }

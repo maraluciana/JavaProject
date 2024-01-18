@@ -6,6 +6,10 @@ public class OrderRequestDTO {
     private UUID userId;
     private UUID cartId;
 
+    public OrderRequestDTO(UUID userId, UUID cartId){
+        this.userId = userId;
+        this.cartId = cartId;
+    }
     public UUID getUserId() {
         return userId;
     }
